@@ -9,9 +9,11 @@ import {
 } from "@material-ui/icons"
 import React from "react"
 import styled from "styled-components"
+import { mobile } from "../responsive"
 
 const Container = styled.div`
   display: flex;
+  ${mobile({ flexDirection: "column" })}
 `
 const Left = styled.div`
   flex: 1;
@@ -28,7 +30,7 @@ const SocialContainer = styled.div`
   align-items: center;
   justify-content: space-between;
 `
-const SocialIcon = styled.div`
+const A = styled.a`
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -37,6 +39,7 @@ const SocialIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 `
 
 const Center = styled.div`
@@ -65,6 +68,7 @@ const ListItem = styled.li`
 const Right = styled.div`
   flex: 1;
   padding: 20px;
+  ${mobile({ backgroundColor: "#eee" })}
 `
 
 const ContactItem = styled.div`
@@ -89,18 +93,27 @@ const Footer = () => {
           dolore magnam soluta.
         </Desc>
         <SocialContainer>
-          <SocialIcon color="3b5999">
+          <A
+            href="https://www.facebook.com/seam.kenway/"
+            target="_blank"
+            color="3b5999">
             <Facebook />
-          </SocialIcon>
-          <SocialIcon color="e5505f">
+          </A>
+          <A
+            href="https://www.instagram.com/siam_kenway/"
+            target="_blank"
+            color="e5505f">
             <Instagram />
-          </SocialIcon>
-          <SocialIcon color="55acda">
+          </A>
+          <A
+            href="https://www.linkedin.com/in/muhammad-siam-77703520b/"
+            target="_blank"
+            color="55acda">
             <LinkedIn />
-          </SocialIcon>
-          <SocialIcon color="000000">
+          </A>
+          <A href="https://github.com/MshSiam" target="_blank" color="000000">
             <GitHub />
-          </SocialIcon>
+          </A>
         </SocialContainer>
       </Left>
       <Center>
@@ -114,7 +127,7 @@ const Footer = () => {
           <ListItem>My Account</ListItem>
           <ListItem>Order Tracking</ListItem>
           <ListItem>Whislist</ListItem>
-          <ListItem>Terms & Condition</ListItem>
+          <ListItem>lorem</ListItem>
         </List>
       </Center>
       <Right>
