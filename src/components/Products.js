@@ -30,7 +30,7 @@ const Products = ({ cat, filter, sort }) => {
   return (
     <Container>
       {products.map((item) => (
-        <Product key={item.id} item={item} />
+        <Product key={item._id} item={item} />
       ))}
     </Container>
   )
