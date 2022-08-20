@@ -1,4 +1,5 @@
 import { Add, Remove } from "@material-ui/icons"
+import axios from "axios"
 import React from "react"
 import { useEffect } from "react"
 import { useState } from "react"
@@ -25,7 +26,7 @@ const ImageContainer = styled.div`
 
 const Image = styled.img`
   width: 100%;
-  height: 90vh;
+  height: 40vh;
   object-fit: cover;
   ${mobile({ height: "40vh" })}
 `
@@ -128,6 +129,11 @@ const Product = () => {
   const id = location.pathname.split("/")[2]
 
   const [product, setProduct] = useState({})
+  const [quantity, setQuantity] = useState(1)
+  const [color, setColor] = useState("")
+  const [size, setSize] = useState("")
+
+  console.log(color, size)
   useEffect(() => {
     const getProduct = async () => {
       try {
@@ -137,6 +143,17 @@ const Product = () => {
     }
     getProduct()
   }, [id])
+
+  const handleQuantity = (type) => {
+    if (type === "dec") {
+      quantity > 1 && setQuantity(quantity - 1)
+    } else if (type === "inc") {
+      setQuantity(quantity + 1)
+    }
+  }
+
+  const handleClick = () => {}
+
   return (
     <Container>
       <Navbar />
@@ -156,14 +173,18 @@ const Product = () => {
             <Filter>
               <FilterTitle>Color</FilterTitle>
               {product?.color?.map((c) => (
-                <FilterColor color={c} key={c} />
+                <FilterColor color={c} key={c} onClick={() => setColor(c)} />
               ))}
             </Filter>
             <Filter>
               <FilterTitle>Size</FilterTitle>
               <FilterSize>
                 {product?.size?.map((s) => (
-                  <FilterSizeOption key={s}>{s}</FilterSizeOption>
+                  <FilterSizeOption
+                    key={s}
+                    onChange={(e) => setSize(e.target.value)}>
+                    {s}
+                  </FilterSizeOption>
                 ))}
               </FilterSize>
             </Filter>
@@ -171,11 +192,17 @@ const Product = () => {
 
           <AddContainer>
             <AmountContainer>
-              <Remove style={{ cursor: "pointer" }} />
-              <Amount>1</Amount>
-              <Add style={{ cursor: "pointer" }} />
+              <Remove
+                onClick={() => handleQuantity("dec")}
+                style={{ cursor: "pointer" }}
+              />
+              <Amount>{quantity}</Amount>
+              <Add
+                onClick={() => handleQuantity("inc")}
+                style={{ cursor: "pointer" }}
+              />
             </AmountContainer>
-            <Button>Add to Cart</Button>
+            <Button onClick={handleClick}>Add to Cart</Button>
           </AddContainer>
         </InfoContainer>
       </Wrapper>

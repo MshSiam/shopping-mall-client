@@ -29,9 +29,8 @@ const Products = ({ cat, filter, sort }) => {
 
   return (
     <Container>
-      {products.map((item) => (
-        <Product key={item._id} item={item} />
-      ))}
+      {products &&
+        products.map((item) => <Product key={item._id} item={item} />)}
     </Container>
   )
 }
