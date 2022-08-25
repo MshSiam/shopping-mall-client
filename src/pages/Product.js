@@ -9,8 +9,10 @@ import Announcement from "../components/Announcement"
 import Footer from "../components/Footer"
 import Navbar from "../components/Navbar"
 import NewsLetter from "../components/NewsLetter"
+import { addProduct } from "../redux/cartRedux"
 import { publicRequest } from "../requestMethode"
 import { mobile } from "../responsive"
+import { useDispatch } from "react-redux"
 
 const Container = styled.div``
 
@@ -132,6 +134,7 @@ const Product = () => {
   const [quantity, setQuantity] = useState(1)
   const [color, setColor] = useState("")
   const [size, setSize] = useState("")
+  const dispatch = useDispatch()
 
   console.log(color, size)
   useEffect(() => {
@@ -147,12 +150,14 @@ const Product = () => {
   const handleQuantity = (type) => {
     if (type === "dec") {
       quantity > 1 && setQuantity(quantity - 1)
-    } else if (type === "inc") {
+    } else {
       setQuantity(quantity + 1)
     }
   }
 
-  const handleClick = () => {}
+  const handleClick = () => {
+    dispatch(addProduct({ ...product, quantity, color, size }))
+  }
 
   return (
     <Container>
@@ -178,13 +183,9 @@ const Product = () => {
             </Filter>
             <Filter>
               <FilterTitle>Size</FilterTitle>
-              <FilterSize>
+              <FilterSize onChange={(e) => setSize(e.target.value)}>
                 {product?.size?.map((s) => (
-                  <FilterSizeOption
-                    key={s}
-                    onChange={(e) => setSize(e.target.value)}>
-                    {s}
-                  </FilterSizeOption>
+                  <FilterSizeOption key={s}>{s}</FilterSizeOption>
                 ))}
               </FilterSize>
             </Filter>
@@ -192,15 +193,9 @@ const Product = () => {
 
           <AddContainer>
             <AmountContainer>
-              <Remove
-                onClick={() => handleQuantity("dec")}
-                style={{ cursor: "pointer" }}
-              />
+              <Remove onClick={() => handleQuantity("dec")} />
               <Amount>{quantity}</Amount>
-              <Add
-                onClick={() => handleQuantity("inc")}
-                style={{ cursor: "pointer" }}
-              />
+              <Add onClick={() => handleQuantity("inc")} />
             </AmountContainer>
             <Button onClick={handleClick}>Add to Cart</Button>
           </AddContainer>
