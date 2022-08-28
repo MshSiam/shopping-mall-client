@@ -18,7 +18,7 @@ const Products = ({ cat, filter, sort }) => {
     const getProducts = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/products?category=coat`
+          `https://intense-temple-24237.herokuapp.com/products?category=coat`
         )
         setProducts(res.data)
         // console.log(res)

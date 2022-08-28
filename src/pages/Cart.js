@@ -162,10 +162,13 @@ const Cart = () => {
   useEffect(() => {
     const makeRequest = async () => {
       try {
-        const res = await axios.post("http://localhost:5000/checkout/payment", {
-          tokenId: stripeToken.id,
-          amount: 500
-        })
+        const res = await axios.post(
+          "https://intense-temple-24237.herokuapp.com/checkout/payment",
+          {
+            tokenId: stripeToken.id,
+            amount: 500
+          }
+        )
         history("/success", {
           stripeData: res.data,
           products: cart
