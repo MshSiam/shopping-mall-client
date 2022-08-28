@@ -1,5 +1,5 @@
 import { Add, Remove } from "@material-ui/icons"
-import React from "react"
+import React, { useEffect } from "react"
 import { useSelector } from "react-redux"
 import styled from "styled-components"
 import Announcement from "../components/Announcement"
@@ -7,6 +7,13 @@ import Footer from "../components/Footer"
 import Navbar from "../components/Navbar"
 import NewsLetter from "../components/NewsLetter"
 import { mobile } from "../responsive"
+import StripeCheckout from "react-stripe-checkout"
+import { useState } from "react"
+import { userRequest } from "../requestMethode"
+import { useNavigate } from "react-router-dom"
+import axios from "axios"
+
+const KEY = process.env.REACT_APP_STRIPE
 
 const Container = styled.div``
 const Wrapper = styled.div`
@@ -141,7 +148,32 @@ const Button = styled.button`
 `
 
 const Cart = () => {
+  const history = useNavigate()
   const cart = useSelector((state) => state.cart)
+
+  const KEY = process.env.REACT_APP_STRIPE
+
+  const [stripeToken, setStripeToken] = useState(null)
+
+  const onToken = (token) => {
+    setStripeToken(token)
+  }
+
+  useEffect(() => {
+    const makeRequest = async () => {
+      try {
+        const res = await axios.post("http://localhost:5000/checkout/payment", {
+          tokenId: stripeToken.id,
+          amount: 500
+        })
+        history("/success", {
+          stripeData: res.data,
+          products: cart
+        })
+      } catch {}
+    }
+    stripeToken && makeRequest()
+  }, [stripeToken, cart.total, history])
 
   return (
     <Container>
@@ -152,7 +184,7 @@ const Cart = () => {
         <Top>
           <TopButton>CONTINUE SHOPPING</TopButton>
           <TopTexts>
-            <TopText>Shopping Bag (2)</TopText>
+            <TopText>Shopping Bag ({cart.quantity})</TopText>
             <TopText>Your Wishlist (0)</TopText>
           </TopTexts>
           <TopButton type="filled">CHECKOUT NOW</TopButton>
@@ -210,7 +242,16 @@ const Cart = () => {
               <SummeryItemText>Total</SummeryItemText>
               <SummeryItemPrice>$ {cart.total}</SummeryItemPrice>
             </SummeryItem>
-            <Button type="filled">CHECKOUT NOW</Button>
+            <StripeCheckout
+              name="Mall"
+              image="https://scontent.fcla4-1.fna.fbcdn.net/v/t39.30808-6/295321205_3241678329404743_8258333138038489774_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=730e14&_nc_eui2=AeHBWg00KUv0-Oxk12Ydy3Ho7EaH7wCpfhjsRofvAKl-GAbD5Xt4_PKxwIkmi2dxXYSkW5b6mjSNhUgU0k_x6QzI&_nc_ohc=N28UfSIquZQAX_jD3D5&_nc_ht=scontent.fcla4-1.fna&oh=00_AT_bSfp4O2hsknbtKsV71PxG3UNQEUVIee3vqEE5vMd47A&oe=630F8FD4"
+              billingAddress
+              shippingAddress
+              description={`Your total is $${cart.total}`}
+              amount={cart.total * 100}
+              token={onToken}
+              stripeKey={KEY}
+            />
           </Summery>
         </Bottom>
       </Wrapper>
